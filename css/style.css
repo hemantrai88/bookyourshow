@@ -19,7 +19,7 @@ a{text-decoration:none;}
 .vertical-top{	vertical-align:top;}/* vertical align top */
 nav.vertical ul li{	display:block;}/* vertical menu */
 nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
-img{max-width:100%;}
+/*img{max-width:100%;}*/
 /*end reset*/
 @font-face {
     font-family: 'open_sansregular';
@@ -56,10 +56,10 @@ body{
 	float: left;
 }
 .logo span{
-	height: 36px;
+	height: 45px;
 	width: 45px;
 	display: inline-block;
-	background: url(../images/logo-icon.png) no-repeat 0px 0px;
+	background: url(../images/3d_logo.png) no-repeat 0px 0px;
 	vertical-align: initial;
 	margin-right: 7px;
 }
@@ -137,7 +137,7 @@ body{
 }
 /*---start-gallery-----*/
 .recent-works {
-	background: url(../images/portfolio-bg.jpg) no-repeat;
+	background: url(../images/show_bg.jpg) no-repeat;
 	padding: 4em 0;
 }
 .gallery{
@@ -307,11 +307,18 @@ body{
 	font-family: 'trump_town_proregular';
 	text-transform:uppercase;
 }
+.recent-works-head h5{
+	color:#FFF;
+	font-size:1.5em;
+	font-family: 'trump_town_proregular';
+	text-transform:uppercase;
+}
 .recent-works-head p{
 	color: #EEE;
 	line-height: 1.5em;
-	width: 50%;
+	width: 90%;
 	margin: 0 auto;
+	font-size:1.5em;
 }
 .morebtn{
 	background: #FFFFFF;
