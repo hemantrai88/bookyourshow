@@ -27,6 +27,78 @@ if (mysqli_connect_errno()) {
 		<script src="js/modernizr.custom.28468.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/simptip-mini.css" media="screen,projection" />
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script>
+			function bookseats(show_id, seat_id){
+				if (confirm("Are you sure you want to buy this ticket?") == true) {
+					var timing=$('#show-timing'+show_id).val();
+					
+					  $.post("book_seat.php",{show_id:show_id,seat_id:seat_id,timing:timing},function(result){
+					    alert("Congratulations! Your ticket has been successfully booked.\n\n Please use your Ticket ID at the theatre to get your ticket.\n\n Your Ticket ID is "+result+".\n\n Enjoy the show.");
+					    $.post("check_booking.php",{show_id:show_id,timing:timing},function(result){
+							$('#show_seats'+show_id).html('');
+							$('#show_seats'+show_id).html(result);
+						});
+					  });
+				 }
+			}
+			
+			/*
+			$(document).ready(function(){
+							$('#show-timing').change(function(){
+								alert($('#show-timing').val());
+								if($('#show-timing').val()!=''){
+									$('#select_seats').show();
+								}else{
+									$('#select_seats').hide();
+								}
+							});
+						});*/
+			
+			
+		</script>
+		<style>
+			.available{
+				background: rgb(28, 184, 65);
+				color: white;
+				border-radius: 4px;
+				text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+				font-size: 100%;
+				padding: .5em 1em;
+				border: 0 rgba(0,0,0,0);
+				display: inline-block;
+				zoom: 1;
+				line-height: normal;
+				white-space: nowrap;
+				vertical-align: baseline;
+				text-align: center;
+				cursor: pointer;
+				-webkit-user-drag: none;
+				-webkit-user-select: none;
+				-webkit-appearance: button;
+			}
+			
+			.taken{
+				background: rgb(223, 117, 20);
+				color: white;
+				border-radius: 4px;
+				text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+				font-size: 100%;
+				padding: .5em 1em;
+				border: 0 rgba(0,0,0,0);
+				display: inline-block;
+				zoom: 1;
+				line-height: normal;
+				white-space: nowrap;
+				vertical-align: baseline;
+				text-align: center;
+				cursor: pointer;
+				-webkit-user-drag: none;
+				-webkit-user-select: none;
+				-webkit-appearance: button;
+				cursor:not-allowed;
+			}
+			
+		</style>
 	</head>
 	<body>
 		<!---start-wrap----->
@@ -119,15 +191,90 @@ if (mysqli_connect_errno()) {
 										<h2><?php echo $row[1]; ?></h2>
 										<div style="display: inline-flex;">
 											<div style="display: inline; width: 50%;">
-											<img  style="display: inline; vertical-align: text-top;" src="images/movie_img_small.gif" alt="Movie" title="Movie #1" />
+											<img  style="display: inline; vertical-align: text-top;" src="images/<?php echo $row[4]; ?>" alt="Movie" title="Movie #1" width="351px;"; />
 											</div>
-											<div style="display: inline-block; width: 50%;"><?php echo nl2br($row[3]); ?></div>
+											<div style="display: inline-block; width: 50%;">
+												<p class="para">Synopsis: </p>
+												<br />
+												<?php echo nl2br($row[3]); ?>
+												<hr>
+												<p class="para">Show Details:</p>
+												<br />
+												<div style="display: inline; margin-left: 5%; font-weight: bold;">Title:</div><div style="display: inline; margin-left: 15%;"> <?php echo $row[1]; ?></div>
+												<br />
+												<div style="display: inline; margin-left: 5%; font-weight: bold;">Genre:</div><div style="display: inline; margin-left: 11%;"> <?php echo $row[2]; ?></div>
+												<br />
+												<hr>
+												<p class="para">Book your show: </p>
+												<br />
+												<div style="display: inline; margin-left: 5%; font-weight: bold;">Select show timing:</div><div style="display: inline; margin-left: 11%;"> 
+													<select id="show-timing<?php echo $row[0]; ?>">
+														<option value="">--Select--</option>
+													<?php 
+												
+															$query="SELECT * FROM schedule WHERE show_id=".$row[0];
+															$res = mysqli_query($con,$query);
+			
+															while($r = mysqli_fetch_array($res)) { ?>
+															<option value="<?php echo $r[0]; ?>"><?php echo $r[2]; ?></option>		
+													<?php	} ?>		
+														
+													</select>
+													<br /><br />
+														
+
+												 </div>
+											</div>
 											
 										</div>
-										
-										<p class="para"></p>
+										<div id="show_seats<?php echo $row[0]; ?>">
+										<div id="select_seats<?php echo $row[0]; ?>" style="border: 2px solid; width: 60%; padding: 5%; margin: 5% auto; display: block;">
+											<button id="seat_1" value="1" style="width: 75px; height: 40px; margin: 2% 5%;" onclick="bookseats(<?php echo $row[0]; ?>,this.value);" /> Seat C1 </button>
+											<button id="seat_2" value="2" style="width: 75px; height: 40px; margin: 2% 5%;" onclick="bookseats(<?php echo $row[0]; ?>,this.value);" />Seat B1</button>
+											<button id="seat_3" value="3" style="width: 75px; height: 40px; margin: 2% 5%;" onclick="bookseats(<?php echo $row[0]; ?>,this.value);" />Seat A1</button>
+											<br />
+											<button id="seat_4" value="4" style="width: 75px; height: 40px; margin: 2% 5%;" onclick="bookseats(<?php echo $row[0]; ?>,this.value);" />Seat C2</button>
+											<button id="seat_5" value="5" style="width: 75px; height: 40px; margin: 2% 5%;" onclick="bookseats(<?php echo $row[0]; ?>,this.value);" />Seat B2</button>
+											<button id="seat_6" value="6" style="width: 75px; height: 40px; margin: 2% 5%;"onclick="bookseats(<?php echo $row[0]; ?>,this.value);" />Seat A2</button>
+											
+											<img src="images/screen.jpg" style="margin-top: -5%; margin-left: 10%;"/>
+										</div>
+										</div>
 									</div>
 								</div>
+								
+								<script>
+								
+									$(document).ready(function(){
+										
+										$('.popup-with-zoom-anim').click(function(){
+											$('#show-timing<?php echo $row[0]; ?>').val('');
+											$('#select_seats<?php echo $row[0]; ?>').hide();
+											});
+										
+										
+										$('#select_seats<?php echo $row[0]; ?>').hide();
+										$('#show_seats<?php echo $row[0]; ?>').hide();
+										$('#show-timing<?php echo $row[0]; ?>').change(function(){
+											  var show_id=<?php echo $row[0]; ?>;
+											  var timing=$('#show-timing<?php echo $row[0]; ?>').val();
+											  $.post("check_booking.php",{show_id:show_id,timing:timing},function(result){
+											    $('#show_seats'+show_id).html('');
+											    $('#show_seats'+show_id).html(result);
+											  });
+											
+											if($('#show-timing<?php echo $row[0]; ?>').val()!=''){
+												$('#select_seats<?php echo $row[0]; ?>').show();
+												$('#show_seats<?php echo $row[0]; ?>').show();
+											}else{
+												$('#select_seats<?php echo $row[0]; ?>').hide();
+												$('#show_seats<?php echo $row[0]; ?>').hide();
+											}
+										});
+									});
+									
+								</script>
+								
 							<?php } ?>
 
 				
@@ -156,7 +303,7 @@ if (mysqli_connect_errno()) {
 								<div class="portfolio <?php echo $row[2]; ?> mix_all" data-cat="<?php echo $row[2]; ?>" style=" ">
 									<div class="portfolio-wrapper">				
 										<a class="popup-with-zoom-anim" href="#small-dialog<?php echo $row[0]; ?>">
-											<img src="images/p<?php echo $row[0]; ?>.jpg" alt="Image 2" style="top: 0px;">
+											<img src="images/<?php echo $row[5]; ?>" alt="Image 2" style="top: 0px;">
 										</a>
 										<div class="label" style="bottom: -40px;">
 											<div class="label-text">
